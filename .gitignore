@@ -1,2 +1,6 @@
 .obsidian/
 .vscode/
+
+# Compilación LaTeX (EMACS)
+**/aux/
+**/auctex-auto/
