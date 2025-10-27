@@ -1,0 +1,32 @@
+%%%%% packages %%%%%
+\input glyphtounicode%
+\pdfgentounicode=1
+\usepackage[spanish]{babel}
+\usepackage{fourier}
+\usepackage{csquotes}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{xparse}
+\usepackage{geometry}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+%%%%% styles %%%%%
+\geometry{top=1.5cm, bottom=1.5cm, left=2.5cm, right=2.5cm}
+
+\pagestyle{fancy}
+\aliaspagestyle{chapter}{fancy}
+
+\fancyfoot[C]{\thepage}
+
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{15pt}
+\setlength{\textheight}{23cm}
+\setlength{\topmargin}{-0.5cm}
+
+\renewcommand{\footrulewidth}{0.4pt}
+
+\chapterstyle{dash}
+
+%%%%% commands %%%%%%
+
