@@ -1,0 +1,28 @@
+\section{Teorema maestro}
+Para determinar la complejidad de un algoritmo recursivo se utiliza
+a menudo el \textbf{teorema maestro}.\\
+
+Formalmente, se define la siguiente relación para casos grandes:
+
+\begin{center}
+  \(T(n) \leq a \cdot T\left(\frac{n}{b}\right) + O(n^{d})\)\\
+  \begin{figure}[h]
+    Parámetros1:\\
+    $a$ es el número de llamadas recursivas.\\
+    $b$ el factor de disminución del tamaño de entrada (sub-problemas).\\
+    $d$ el exponente asociado al trabajo no recursivo.
+  \end{figure}
+\end{center}
+
+De esta relación y si se cumple que $a \geq 1, b > 1 y d \geq 0$, se cumple que:
+
+\begin{center}
+  \[
+    T(n) =
+    \begin{cases}
+      O(n^{d} \log n) & \text{si } a = b^{d} \\
+      O(n^{d}) & \text{si } a < b^{d} \\
+      O(n^{\log_{b} a}) & \text{si } a > b^{d}
+    \end{cases}
+  \]
+\end{center}
