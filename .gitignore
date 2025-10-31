@@ -3,4 +3,4 @@
 
 # Compilación LaTeX (EMACS)
 **/aux/
-**/auctex-auto/
+**/.auctex-auto/
