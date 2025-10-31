@@ -1,0 +1,20 @@
+\subsection{Notación little omega}
+La notación \textit{litte omega} se relaciona con $T(n)$.\\
+
+Similar a la notación \textit{little o}, la notación \textit{little omega}
+permite afirmar que $T(n)$ es \textbf{estrictamente} mayor que $c\cdot f(n)$
+a partir de un $n_{0}$ sea cual sea el valor de $c$.\\
+
+Formalmente, se define como:
+
+\begin{center}
+  \(T(n) = \omega(f(n))\hspace{0.2cm}ssi\hspace{0.2cm}\exists c, n_{0} > 0\hspace{0.2cm}t.q\hspace{0.2cm}T(n) > c\cdot f(n), \forall{n} \geq n_{0}\)
+\end{center}
+
+Paralelamente, se puede intuir a partir de la siguiente relación:
+
+\begin{center}
+  \[
+    \lim_{n\to\infty} \left(\frac{T(n)}{f(n)}\right) = \infty
+  \]
+\end{center}
