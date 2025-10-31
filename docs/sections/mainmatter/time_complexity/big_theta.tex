@@ -1,0 +1,13 @@
+\subsection{Notación Big Theta}
+La notación \textit{Big Theta} se relaciona con $T(n)$.\\
+
+Se utiliza $\Theta(f(n))$ para un $T(n)$ donde se cumple que
+\(T(n) = \O(f(n))\) y \(T(n) = \Omega(f(n))\) para simbolizar
+la cota superior e inferior en tiempo de ejecución de un
+algoritmo frente a un tamaño de entrada $n$.\\
+
+Formalmente, se define como:
+
+\begin{center}
+  \(T(n) = \Theta(f(n))\hspace{0.2cm}ssi\hspace{0.2cm}\exists c_{1}, c_{2}, n_{0} > 0\hspace{0.2cm}t.q\hspace{0.2cm}c_{1}\cdot f(n) \leq T(n) \leq c_{2}\cdot f(n), \forall{n} \geq n_{0}\)
+\end{center}

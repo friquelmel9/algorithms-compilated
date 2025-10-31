@@ -1,0 +1,21 @@
+\subsection{Notación little o}
+La notación \textit{little o} se relaciona con $T(n)$.\\
+
+A diferencia de \textit{Big O}, la notación \textit{little o} permite
+afirmar que $T(n)$ \textbf{siempre} es menor que $c\cdot f(n)$ por muy
+pequeño que sea $c$ a partir de un $n_{0}$ y puede hacerse más pequeña
+de manera arbitraria.\\
+
+Formalmente, se define como:
+
+\begin{center}
+  \(T(n) = o(f(n))\hspace{0.2cm}ssi\hspace{0.2cm}\exists c, n_{0} > 0\hspace{0.2cm}t.q\hspace{0.2cm}T(n) < c\cdot f(n), \forall{n} \geq n_{0}\)
+\end{center}
+
+Por otro lado, también se puede intuir a través de esta relación:
+
+\begin{center}
+  \[
+    \lim_{n\to\infty} \left(\frac{T(n)}{f(n)}\right) = 0
+  \]
+\end{center}

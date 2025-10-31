@@ -1,0 +1,28 @@
+\section{Desempeño de algoritmos}
+Los algoritmos no tienen un rendimiento fijo para cualquier tipo de
+entrada. Generalmente, hay situaciones donde se comportan de mejor
+o peor manera dependiendo de la noción de la cual trabajan. En el
+análisis y diseño de algoritmos se tienen en cuenta los siguientes
+casos para evaluar el rendimiento de un algoritmo.
+
+\subsection{Mejor caso}
+Caso donde el algoritmo funciona de la mejor manera. Por ejemplo,
+el mejor caso de algunos algoritmos de ordenamiento se considera
+el que la entrada ya esté ordenada.
+
+\subsection{Caso promedio}
+Caso donde el algoritmo posee un tiempo de ejecución esperado
+dentro una distribución de entradas. Para comprobarlo, se necesita
+una hipótesis probabilística.
+
+\subsection{Peor caso}
+Caso donde el algoritmo trabaja de peor forma. Es la situación que
+se utiliza generalmente para las notaciones asíntoticas. Un ejemplo
+es una entrada inversamente ordenada para los algoritmos de
+ordenamiento.
+
+\subsection{Caso amortizado}
+Costo promedio de \textbf{una operación} en una secuencia larga de
+operaciones que no depende de la distribución de la entrada.
+Un ejemplo es el método \textit{push\_back} para la clase \textit{vector}
+de \textit{C++}.

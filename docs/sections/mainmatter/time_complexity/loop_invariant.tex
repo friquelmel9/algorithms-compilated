@@ -1,0 +1,24 @@
+\section{Invariante de ciclo}
+Una técnica que se utiliza a menudo para demostrar la correctitud de un
+algoritmo es usar un \textbf{invariante de ciclo.} Un \textit{invariante}
+es una afirmación o predicado sobre un conjunto de variables relacionadas
+que es \textbf{siempre verdadero}. La idea es que este invariante sea
+\textbf{constante} en cada iteración y que explique la relación entre
+las variables de entrada y salida del ciclo.
+
+\subsection{Etapas del invariante de ciclo}
+\textbf{Inicialización: }El invariante debe ser verdadero
+\textbf{antes de empezar} el ciclo (caso base).\\
+
+\textbf{Mantención: }El invariante es verdadero
+\textbf{antes de cada iteración del ciclo} y se mantiene
+verdadero hasta \textbf{antes de la siguiente iteración.}
+A menudo se utiliza \textbf{inducción} para probar este
+punto con una \textit{hipótesis inductiva} para luego
+realizar un \textit{paso inductivo}.\\
+
+\textbf{Finalización: }El invariante debe ser verdadero
+\textbf{después de terminar} el ciclo.\\
+
+\textbf{Conclusión: }Si el invariante es verdadero en cada etapa, el
+algoritmo es correcto.
