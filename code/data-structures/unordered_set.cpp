@@ -7,24 +7,24 @@ std::unordered_set<T> unordered_set;
 
 /**
  * Retorna el tamaño del unordered_set
- * CT: O(1)
+ * @timecomplexity: O(1)
  */
 unordered_set.size();
 
 /**
  * Inserta un elemento al unordered_set
- * CT: O(1)
+ * @timecomplexity: O(1)
  */
 unordered_set.insert(item);
 
 /**
  * Elimina el elemento del unordered_set
- * CT: O(1)
+ * @timecomplexity: O(1)
  */
 unordered_set.erase(item);
 
 /**
  * Retorna un iterador al elemento item. En caso que no existe retorna un iterador al final
- * CT: O(1)
+ * @timecomplexity: O(1)
  */
 unordered_set.find(item);

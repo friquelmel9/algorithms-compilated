@@ -7,25 +7,25 @@ std::map<T1,T2> map;
 
 /**
  * Retorna el tamaño del map
- * CT: O(1)
+ * @timecomplexity: O(1)
  */
 map.size();
 
 /**
  * Inserta un par llave - valor dentro del map
- * CT: O(\log{n})
+ * @timecomplexity: O(\log{n})
  */
 map.insert({llave,valor});
 
 /**
  * Elimina el par que contenga la llave
- * CT: O(\log{n})
+ * @timecomplexity: O(\log{n})
  */
 map.erase(llave);
 
 /**
  * Retorna un iterador hacia item. Retorna un iterador al final si no existe
- * CT: O(\log{n})
+ * @timecomplexity: O(\log{n})
  * 
  */
 itr = map.find(llave);
