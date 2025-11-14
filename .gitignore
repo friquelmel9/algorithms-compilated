@@ -4,3 +4,4 @@
 # Compilación LaTeX (EMACS)
 **/aux/
 **/.auctex-auto/
+**/_minted*/ 

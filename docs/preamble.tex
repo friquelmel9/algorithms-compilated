@@ -9,6 +9,7 @@
 \usepackage{fancyhdr}
 \usepackage{xparse}
 \usepackage{geometry}
+\usepackage{minted}
 \usepackage[backend=biber]{biblatex}
 \addbibresource{references.bib}
 
@@ -29,5 +30,27 @@
 
 \chapterstyle{section}
 
+\newminted[cppcode]{cpp}{
+    bgcolor=gray!10, 
+    fontsize=\small,
+    breaklines,
+    style=tango
+}
+
+\newminted[bashcode]{bash}{
+    bgcolor=gray!10,
+    fontsize=\small,
+    breaklines,
+    style=vim
+}
+
+\newmintedfile[cppfile]{cpp}{
+    bgcolor=gray!10, 
+    fontsize=\small,
+    breaklines,
+    style=tango
+}
+
 %%%%% commands %%%%%%
 
+\renewcommand{\arraystretch}{1.25}
