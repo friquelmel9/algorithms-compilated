@@ -8,19 +8,26 @@ help: ## Comando de ayuda
 requirements: ## Instala dependencias
 	@echo "[+] Instalando dependencias..."
 
-compile: ## Compila el archivo principal en pdf-latex
+compile: clean ## Compila el archivo principal en pdf-latex
 	@echo "[+] Compilando..."
-	@pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1 || (echo "[!] Error al compilar"; exit 1)
+	@pdflatex -shell-escape -interaction=nonstopmode main.tex > /dev/null 2>&1 || (echo "[!] Error al compilar"; exit 1)
 	@biber main > /dev/null 2>&1
-	@pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1 || (echo "[!] Error al compilar"; exit 1)
-	@pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1 || (echo "[!] Error al compilar"; exit 1) 
+	@pdflatex -shell-escape -interaction=nonstopmode main.tex > /dev/null 2>&1 || (echo "[!] Error al compilar"; exit 1)
+	@pdflatex -shell-escape -interaction=nonstopmode main.tex > /dev/null 2>&1 || (echo "[!] Error al compilar"; exit 1) 
 	@$(MAKE) move
 
 move: ## Mueve los archivos temporales a aux
-	@find . -maxdepth 4 -type f ! -name '*.png' ! -name '*.tex' ! -name 'makefile' ! -name '*.pdf' \
-		! -name 'README.md' ! -name 'author.tex' ! -name 'preamble.tex' ! -name 'references.bib' \
-		! -name 'report.bcf-SAVE-ERROR' ! -name 'main.pdf' ! -name 'main.tex' ! -name 'sections' \
-		-exec mv {} ./aux/ \; 2>/dev/null
+	@mkdir -p aux
+	@find . -maxdepth 4 -type f \( \
+		-name '*.aux' -o \
+		-name '*.bbl' -o \
+		-name '*.bcf' -o \
+		-name '*.blg' -o \
+		-name '*.out' -o \
+		-name '*.toc' -o \
+		-name '*.run.xml' -o \
+		-name '*.log' \
+	\) -exec mv -f {} aux/ \;
 
 clean: ## Limpia los archivos temporales en aux
 	@rm -rf aux/*
