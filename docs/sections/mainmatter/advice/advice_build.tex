@@ -1,0 +1,137 @@
+\chapter{Consejos y consideraciones}
+
+\section{Forma eficiente de leer un problema}
+
+\begin{itemize}
+  \item{Leer la entrada y salida del problema.}
+  \item{Leer el enunciado (eliminar información innecesaria en función
+        del paso anterior).}
+  \item{Obtener \textbf{observaciones} y \textbf{propiedades} del problema.}
+  \item{Pensar en un algoritmo (si es menos de $10^{8}$ operaciones, es válido).}
+\end{itemize}
+
+\section{Estimación de complejidades aceptadas en función de tamaño de entrada}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+    \hline
+    n & Peor complejidad aceptada \\
+    \hline
+    \(n <= 10\) & \(O(n!), O(n^{7}), O(n^{6})\)\\
+    \hline
+    \(n <= 20\) & \(O(2^{n} \cdot n), O(n^{5})\)\\
+    \hline
+    \(n <= 80\) & \(O(n^{4})\)\\
+    \hline
+    \(n <= 400\) & \(O(n^{3})\)\\
+    \hline
+    \(n <= 7500\) & \(O(n^{2})\)\\
+    \hline
+    \(n <= 7 \cdot 10^{4}\) & \(O(n\sqrt{n})\) \\
+    \hline
+    \(n <= 5 \cdot 10^{5}\) & \(O(n\log{n})\)\\
+    \hline
+    \(n <= 5 \cdot 10^{6}\) & \(O(n)\)\\
+    \hline
+    \(n > 10^{8}\) & \(O(\log{n}), O(1)\)\\
+    \hline
+\end{tabular}
+\end{center}
+
+\section{Técnicas para encontrar propiedades de un problema}
+
+\begin{enumerate}
+  \item{Resolver desde lo específico a lo general.}
+  \item{Confiar en tus capacidades y supuestos.}
+  \item{Si no se te ocurre nada en 60 minutos, sigue con otra cosa.}
+\end{enumerate}
+
+\section{Consejos para C++}
+
+La librería más utilizada y que engloba todo lo necesario para problemas de
+programación competitiva es:
+
+\begin{cppcode}
+#include <bits/stdc++.h>
+\end{cppcode}
+
+También se recomienda definir aliases para tipos de datos recurrentes con el
+propósito de agilizar la escritura. Por ejemplo, algunas definiciones pueden ser
+
+\begin{cppcode}
+#define ll long long
+#define ld long double
+#define vvi std::vector<std::vector<int>>
+/*...*/
+\end{cppcode}
+
+A modo de optimizar, hay configuraciones que se pueden utilizar al inicio
+de cada programa:
+
+\begin{cppcode}
+std::ios_base::sync_with_stdio(false);
+std::cin.tie(NULL);
+std::cout.tie(NULL);
+\end{cppcode}
+
+Para pruebas rápidas de samples, es posible usar el mismo ejecutable junto a un
+archivo de texto con las entradas esperadas.
+
+\begin{bashcode}
+bashiee@benjitooo $ g++ program.cpp
+bashiee@benjitooo $ ./a.out < sample.txt
+\end{bashcode}
+
+\section{Consejos para programación dinámica}
+
+\subsection{Cuándo NO usar DP}
+
+\begin{itemize}
+  \item{\textbf{NO hay subestructura óptima}: No hay subproblemas con soluciones
+        óptimas.}
+  \item{\textbf{No hay superposición de problemas}: No hay subproblemas que se
+        resuelvan más de una vez.}
+  \item{\textbf{Hay un greedy que funciona.}}
+  \item{\textbf{Espacio/Tiempo excesivo para las dimensiones del problema.}}
+  \item{\textbf{Problemas NP-Completos sin restricciones.}}
+\end{itemize}
+
+\subsection{Metodología sistemática}
+
+\begin{enumerate}
+  \item{\textbf{¿Qué quiero calcular? (costos, maximizar, minimizar\ldots).}}
+  \item{\textbf{¿De qué variables depende?}}
+  \item{\textbf{Calcular complejidad (Espacio y tiempo).}}
+  \item{\textbf{¿Es muy costoso? (optimizar, volver al paso 2).}}
+\end{enumerate}
+
+\subsection{Patrones comúnes}
+
+\begin{itemize}
+  \item{\textbf{DP en 1D:} Subproblemas dependen de estados anteriores inmediatos
+        (fibonacci, coin, stairs\ldots).}
+  \item{\textbf{DP en 2D:} Subproblemas dependen de dos parámetros (knapsack, LCS\ldots)}
+\end{itemize}
+
+\subsection{Errores comúnes}
+
+\begin{itemize}
+  \item{\textbf{Olvidar restricciones (estados inválidos).}}
+  \item{\textbf{Índices incorrectos (límites del problema).}}
+  \item{\textbf{Estados insuficientes (No se considera toda la información).}}
+\end{itemize}
+
+\subsection{Consejos clave}
+
+\begin{itemize}
+  \item{\textbf{Buscar opciones recursivas naturales:} ¿Qué pasaría si existiera
+        una función mágica? ¿Cuál sería la última decisión por tomar?}
+  \item{\textbf{Identificar patrones de repetición:} ¿Los mismos subproblemas
+        aparecen más de una vez?}
+  \item{\textbf{Definir un estado por completo:} ¿Qué información se necesita
+        para definir un subproblema por completo?}
+  \item{\textbf{Considerar casos bases:} ¿Cuándo termina la recursión?}
+  \item{\textbf{Empezar con casos pequeños:} Resolver manualmente casos pequeños.
+        Buscar patrones.}
+  \item{\textbf{Pensar en los últimos elementos}: ¿Cómo se llegó a este estado?}
+\end{itemize}
