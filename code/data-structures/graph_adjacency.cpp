@@ -1,16 +1,5 @@
 #include <bits/stdc++.h>
-
-
-// Parametros
-
-#define ACTIVE true
-#define DELETED false
-
-#define INF LLONG_MAX
-#define MINF LLONG_MIN
-
-#define NEG_LOOP true
-#define IMPOSSIBLE -2
+#include "disjoint_set_union.cpp"
 
 /**
  * Clase que implementa un grafo mediante lista de adyacencia
@@ -33,12 +22,21 @@ class GraphAdjacency{
             int weight; // Peso de la arista
         };
         
+        // Definición de estados 
+        const int ACTIVE = 1;
+        const int INACTIVE = 0;
+        
+        // Defincion de estados para DFS
+        const int NOT_VISITED = 0;
+        const int IN_PROCESS = 1;
+        const int VISITED = 2;
+        
         /**
          * @brief Representa un nodo con valor asociado y estado, utilizado par avarios algoritmos
          */
         struct Node{
             int node_val; // Posible valor a guardar si indice no equivale
-            int state = ACTIVE; // Estado del nodo (Utilizado para algoritmos)
+            int state; // Estado del nodo (Utilizado para algoritmos)
             std::vector<Edge> adj; // Lista de adyacencia del nodo actual
         };
         
@@ -46,6 +44,8 @@ class GraphAdjacency{
         int m_edges; // Cantidad de aristas en el grafo
         
         std::vector<Node> nodes; // Vector que guardas los nodos relacionados al grafo.
+        
+        
     
     public:
     
@@ -148,4 +148,56 @@ class GraphAdjacency{
                 nodes[node_u].state = new_state;
             }
         }
+        
+        struct KruskalEdge{
+            int node_u;
+            int node_v;
+            int weight;
+        };
+        
+        /**
+         * Obtiene el Minimum Spanning Tree usando Kruskal
+         * 
+         * @pre El grafo debe ser unidireccionado. Para esto, asegurarse de usar AddEdge en ambos sentidos
+         * @pre Debe incluirse una implementación de Disjoint Set Union (DSU)
+         * @pre Utilizar el struct definido para guardar el MSP, KruskalEdge
+         * 
+         * @return Valor
+         */
+        std::vector<KruskalEdge> minimumSpanningTreeKruskal(){
+            
+            std::vector<KruskalEdge> all_edges;
+            
+            for (int node_u = 0; node_u < n_nodes; node_u++) {
+                
+                std::vector<Edge>& adj = nodes[node_u].adj;
+                
+                for (Edge edge : adj) {
+                    int v = edge.node_v;
+                    if (node_u < v) { 
+                        all_edges.push_back({node_u, v, edge.weight});
+                    }
+                }
+            }
+            
+            std::sort(all_edges.begin(), all_edges.end(), [](const KruskalEdge& a, const KruskalEdge& b) {
+                return a.weight < b.weight;
+            });
+            
+            DisjointSetUnion dsu(n_nodes);
+            std::vector<KruskalEdge> mst_edges;
+            
+            for (KruskalEdge edge : all_edges) {
+                if (dsu.unite(edge.node_u, edge.node_v)) {
+                    mst_edges.push_back(edge); 
+                }
+                
+                if (mst_edges.size() == n_nodes - 1) {
+                    break;
+                }
+            }
+            
+            return mst_edges;
+        }
+        
 };
