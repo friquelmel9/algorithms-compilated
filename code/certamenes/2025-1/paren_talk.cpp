@@ -68,6 +68,9 @@ Output 3
 
 6
  * @source: https://codeforces.com/gym/615921/problem/E
+ * @timecomplexity: O(n). Avanza por los n elementos en parenTalk
+ * @spacecomplexity: O(n). Hay un vector n para parentesis, y en el peor de los casos, el stack mantendra como maximo n/2 elementos,,
+ * lo cual es O(n/2) = O(n)
 */
 
 #include <bits/stdc++.h>
@@ -85,14 +88,14 @@ ll parenTalk(std::vector<char> parenthesis, ll n_size){
     
     for(ll curr_idx = 0;  curr_idx < n_size; curr_idx++){
         
-        if(parenthesis[curr_idx] == '('){
+        if(parenthesis[curr_idx] == '('){ // O(1)
             
-            state.push(curr_idx);
+            state.push(curr_idx); // O(1)
             
         }
         else { 
             
-            state.pop(); 
+            state.pop();  // O(1)
             
             if(state.empty()){
                 state.push(curr_idx);
