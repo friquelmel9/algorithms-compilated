@@ -1,0 +1,94 @@
+\section{Map}
+
+Un map es una estructura de datos que guarda valores en la forma llave : valor.
+
+\begin{cppcode}
+    
+    /**
+    * Declaración de un map con llave del tipo T1 y valor del tipo T2
+    */
+    std::map<T1,T2> map;
+
+    /**
+    * Retorna el tamaño del map
+    * @timecomplexity: O(1)
+    */
+    map.size();
+
+    /**
+    * Inserta un par llave - valor dentro del map
+    * @timecomplexity: O(\log{n})
+    */
+    map.insert({llave,valor});
+
+    /**
+    * Elimina el par que contenga la llave
+    * @timecomplexity: O(\log{n})
+    */
+    map.erase(llave);
+
+    /**
+    * Retorna un iterador hacia item. Retorna un iterador al final si no existe
+    * @timecomplexity: O(\log{n})
+    * 
+    */
+    itr = map.find(llave);
+
+    /**
+    * Acceso al primer elemento (llave)
+    */
+    itr -> first;
+
+    /**
+    * Acceso al segundo elemento (valor)
+    */
+    itr -> second;
+    
+\end{cppcode}
+
+\subsection{Unordered Map}
+
+El unordered map cumple con las mismas propiedades que un Map.
+Su complejidades pasan a ser $O(1)$, dado de pasar de un Red-Black tree a un hash
+
+\begin{cppcode}
+    /**
+    * Declaración de un unordered_map con llave del tipo T1 y valor del tipo T2
+    */
+    std::unordered_map<T1,T2> unordered_map;
+
+    /**
+    * Retorna el tamaño del unordered_map
+    * @timecomplexity: O(1)
+    */
+    unordered_map.size();
+
+    /**
+    * Inserta un par llave - valor dentro del unordered_map
+    * @timecomplexity: O(1)
+    */
+    unordered_map.insert({llave,valor});
+
+    /**
+    * Elimina el par que contenga la llave
+    * @timecomplexity: O(1)
+    */
+    unordered_map.erase(llave);
+
+    /**
+    * Retorna un iterador hacia item. Retorna un iterador al final si no existe
+    * @timecomplexity: O(1)
+    * 
+    */
+    itr = unordered_map.find(llave);
+
+    /**
+    * Acceso al primer elemento (llave)
+    */
+    itr -> first;
+
+    /**
+    * Acceso al segundo elemento (valor)
+    */
+    itr -> second;
+\end{cppcode}
