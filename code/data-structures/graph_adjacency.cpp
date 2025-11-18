@@ -31,6 +31,10 @@ class GraphAdjacency{
         const int IN_PROCESS = 1;
         const int VISITED = 2;
         
+        // Definición de estados para Bellman
+        const int INF = INT_MAX;
+        const int MINF = INT_MIN;
+        
         /**
          * @brief Representa un nodo con valor asociado y estado, utilizado par avarios algoritmos
          */
@@ -149,6 +153,90 @@ class GraphAdjacency{
             }
         }
         
+        /**
+         * Realiza el algoritmo de Bellman para encontrar distancias con aristas de peso negativo
+         * 
+         * @param s_node Nodo incial donde realizar el Bellman
+         * @param ref_node Nodo que se quiere saber su valor de distancia desde s_node
+         * 
+         * @return Valor
+         */
+        int bellman(int s_node, int ref_node){
+            
+            std::vector<long long> dp_distances(n_nodes, INF); // Utiliza long long por si hay overflow
+            std::vector<bool> dp_negative_cycle(n_nodes, false);
+            
+            // Caso base: dp[s_node]
+            
+            dp_distances[s_node] = 0;
+            
+            // Relajacion: n-1 iteraciones
+            
+            for(int curr_itr = 0; curr_itr < n_nodes - 1; curr_itr++){
+                for(int curr_node = 0; curr_node < n_nodes; curr_node++){
+                    
+                    if(dp_distances[curr_node] == INF){continue;}
+                    
+                    std::vector<Edge>& adj = nodes[curr_node].adj;
+                    
+                    for(Edge edge : adj){
+                        
+                        int node_v = edge.node_v;
+                        
+                        long long new_dist = dp_distances[curr_node] + edge.weight; 
+                        
+                        if (new_dist < dp_distances[node_v]){
+                            dp_distances[node_v] = new_dist;
+                        }
+                    }
+                }
+            }
+            
+            // Detección y Propagación de Ciclos Negativos
+            
+            // Primero, detectar qué nodos pueden ser relajados en la n-ésima iteración
+            for(int curr_node = 0; curr_node < n_nodes; curr_node++){
+                
+                if(dp_distances[curr_node] == INF){ continue; }
+                
+                std::vector<Edge>& adj = nodes[curr_node].adj;
+                
+                for(Edge edge : adj){
+                    
+                    int node_v = edge.node_v;
+                    long long new_dist = dp_distances[curr_node] + edge.weight;
+                    
+                    // Si se puede relajar en la n-ésima iteración, está en un ciclo negativo o es alcanzable desde uno.
+                    if(new_dist < dp_distances[node_v]){
+                        dp_negative_cycle[node_v] = true;
+                    }
+                }
+            }
+            
+            // Segundo, propagar el estado de ciclo negativo a todos los nodos alcanzables.
+            // Esto requiere n-1 iteraciones adicionales (similar a un BFS/DFS implícito)
+            for(int curr_itr = 0; curr_itr < n_nodes - 1; curr_itr++){
+                for(int curr_node = 0; curr_node < n_nodes; curr_node++){
+                    
+                    if(dp_negative_cycle[curr_node]){
+                        
+                        std::vector<Edge>& adj = nodes[curr_node].adj;
+                        
+                        for(Edge edge : adj){
+                            int node_v = edge.node_v;
+                            dp_negative_cycle[node_v] = true;
+                        }
+                    }
+                }
+            }
+            
+            // Retorno
+            
+            if(dp_distances[ref_node] == INF){return INF;} // No alcanzable
+            else if(dp_negative_cycle[ref_node] == true){return -1; } // Negative cycle
+            else{return dp_distances[ref_node]; } // Resolución
+        }
+        
         struct KruskalEdge{
             int node_u;
             int node_v;
@@ -199,5 +287,4 @@ class GraphAdjacency{
             
             return mst_edges;
         }
-        
 };
