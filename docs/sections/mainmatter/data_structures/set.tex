@@ -1,0 +1,78 @@
+\section{Set}
+
+Un set es una estructura de datos que permite guardar elementos unicos.
+
+\begin{cppcode}
+    /**
+    * Declaración de un set de tipo T
+    */
+    std::set<T> set;
+
+    /**
+    * Retorna el tamaño del set
+    * @timecomplexity: O(1)
+    */
+    set.size();
+
+    /**
+    * Inserta un elemento al set
+    * @timecomplexity: O(\log{n})
+    */
+    set.insert(item);
+
+    /**
+    * Elimina el elemento del set
+    * @timecomplexity: O()
+    */
+    set.erase(item);
+
+    /**
+    * Retorna un iterador al elemento item. En caso que no existe retorna un iterador al final
+    * @timecomplexity: O(\log{n})
+    */
+    set.find(item);
+
+    /**
+    * Recorrer el set con un iterador. Permite obtener los elementos en orden basado en red-black-tree
+    * @timecomplexity: O(n)
+    */
+    for(auto itr = set.begin(); itr != set.end(); itr++){}
+\end{cppcode}
+
+\subsection{Unordered Set}
+
+Un unordered set cumple con las mismas propiedades que el set, pero con una complejidad distinta.
+Su complejidad pasa a ser $O(1)$ dada a pasar de un Red-Black Tree a funciones hash.
+
+\begin{cppcode}
+    
+    /**
+    * Declaración de un unordered_set de tipo T
+    */
+    std::unordered_set<T> unordered_set;
+
+    /**
+    * Retorna el tamaño del unordered_set
+    * @timecomplexity: O(1)
+    */
+    unordered_set.size();
+
+    /**
+    * Inserta un elemento al unordered_set
+    * @timecomplexity: O(1)
+    */
+    unordered_set.insert(item);
+
+    /**
+    * Elimina el elemento del unordered_set
+    * @timecomplexity: O(1)
+    */
+    unordered_set.erase(item);
+
+    /**
+    * Retorna un iterador al elemento item. En caso que no existe retorna un iterador al final
+    * @timecomplexity: O(1)
+    */
+    unordered_set.find(item);
+    
+\end{cppcode}
