@@ -174,6 +174,9 @@ class GraphAdjacency{
          * @param start_node Nodo desde que se realiza el BFS
          * 
          * @return No retorna nada, pero deja a los estados de los nodos como visitados o no visitados.
+         * 
+         * @timecomplexity: O(V + E), con V = #vertices y E = #edges
+         * @spacecomplexity: O(V)
          */
         void BFS(int start_node){
             
@@ -213,6 +216,9 @@ class GraphAdjacency{
          * @param ref_node Nodo que se quiere saber su valor de distancia desde s_node
          * 
          * @return Valor
+         * 
+         * @timecomplexity: O(V * E)
+         * @spacecomplexity: O(2V) = O(V)
          */
         int bellman(int s_node, int ref_node){
             
@@ -304,6 +310,9 @@ class GraphAdjacency{
          * @pre Utilizar el struct definido para guardar el MSP, KruskalEdge
          * 
          * @return Valor
+         * 
+         * @timecomplexity: O(E \log{E}) o O(E \log{V})
+         * @spacecomplexity: O(V + E)
          */
         std::vector<KruskalEdge> minimumSpanningTreeKruskal(){
             
