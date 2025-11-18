@@ -154,6 +154,59 @@ class GraphAdjacency{
         }
         
         /**
+         * Modifica todo los valores de los nodos al requerido
+         * 
+         * @param new_state Nuevo estado a incluir en todos los nodos
+         */
+        void modifyAllNodeState(int new_state){
+            
+            for(int curr_node = 0; curr_node < n_nodes; curr_node++){
+                
+                modifyNodeState(curr_node,new_state);
+                
+            }
+            
+        }
+        
+        /**
+         * Realiza el proceso de BFS en el grafo.
+         * 
+         * @param start_node Nodo desde que se realiza el BFS
+         * 
+         * @return No retorna nada, pero deja a los estados de los nodos como visitados o no visitados.
+         */
+        void BFS(int start_node){
+            
+            modifyAllNodeState(NOT_VISITED);
+            
+            std::queue<int> queue;
+            
+            nodes[start_node].state = VISITED;
+            queue.push(start_node);
+            
+            while(!queue.empty()){
+                
+                int node_u = queue.front();
+                queue.pop();
+                
+                for(Edge edge : nodes[node_u].adj){
+                    
+                    int node_v = edge.node_v;
+                    
+                    if(nodes[node_v].state == NOT_VISITED){
+                        
+                        nodes[node_v].state = VISITED;
+                        queue.push(node_v);
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        /**
          * Realiza el algoritmo de Bellman para encontrar distancias con aristas de peso negativo
          * 
          * @param s_node Nodo incial donde realizar el Bellman
