@@ -1,4 +1,7 @@
-\section{Fibonnaci}
+\section{Problemas}
+
+\newpage
+\subsection{Fibonnaci}
 
 The Fibonacci numbers, commonly denoted F(n) form a sequence, called the Fibonacci sequence, such that each number is the 
 sum of the two preceding ones, starting from 0 and 1. That is,
@@ -8,25 +11,25 @@ $$F(n) = F(n - 1) + F(n - 2), \text{for} n > 1.$$
 
 Given n, calculate F(n).
 
-Example 1:
+\subsubsection{Example 1:}
 
 Input: n = 2 \\
 Output: 1 \\
 Explanation: $F(2) = F(1) + F(0) = 1 + 0 = 1$.
 
-Example 2:
+\subsubsection{Example 2:}
 
 Input: n = 3\\
 Output: 2\\
 Explanation: $F(3) = F(2) + F(1) = 1 + 1 = 2$.
 
-Example 3:
+\subsubsection{Example 3:}
 
 Input: n = 4\\
 Output: 3\\
 Explanation: $F(4) = F(3) + F(2) = 2 + 1 = 3$.
 
-Constraints:
+\subsubsection{Constraints:}
 
 $0 <= n <= 30$
 
@@ -58,3 +61,637 @@ $0 <= n <= 30$
         \};
 \end{cppcode}
 
+
+
+\subsection{Knapsack}
+
+Implement a solution to the classic knapsack problem. You are given a knapsack that can hold up to a
+certain weight (its capacity), and several items you may choose to put in the knapsack. Each item has
+a weight and a value. Choose a subset of the items (which could be all of them, or none of them)
+having the greatest value that fit into the knapsack (i.e. the sum of the weights of the items you
+choose must be less than or equal to the knapsack capacity).
+
+\subsubsection{Input}
+
+The input consists of between 1 and 30 test cases. Each test case begins with an integer $1 \leq C \leq
+2\,000$, giving the capacity of the knapsack, and an integer $1 \leq n \leq 2\,000$, giving the number of
+objects. Then follow $n$ lines, each giving the value and weight of the $n$ objects. Both values and
+weights are integers between 1 and $10\,000$.
+
+\subsubsection{Output}
+
+For each test case, output a line containing the number of items chosen, followed by a line
+containing the indices of the chosen items (the first item has index 0, the second index 1, and so on).
+The indices can be given in any order.
+
+\subsubsection{Example 1: }
+
+5 3 \\
+1 5 \\
+10 5 \\
+100 5
+6 4 \\
+5 4 \\
+4 3 \\
+3 2 \\
+2 1 \\
+
+\subsubsection{Output Example 1: }
+
+1 \\
+2 \\
+3 \\
+1 2 3 \\
+
+\begin{cppcode}
+    
+#include <bits/stdc++.h>
+
+#define ll long long
+
+struct Object{
+    ll value;
+    ll weight;
+};
+
+void knapstack(ll capacity, std::vector<Object>& objects, std::vector<std::vector<ll>>& dp){
+    
+    // Tablutaion approach to calculate values
+    
+    for(ll i=1; i<=objects.size(); i++){
+        ll curr_value = objects[i-1].value;
+        ll curr_weight = objects[i-1].weight;
+        
+        for(ll w=1; w<=capacity; w++){ 
+            if(curr_weight > w){ dp[i][w] = dp[i-1][w]; } // if can't take
+            else{
+                ll not_take_value = dp[i-1][w];
+                ll take_value = curr_value + dp[i-1][w - curr_weight];
+                dp[i][w] = std::max(not_take_value, take_value);
+            }
+        }
+        
+    }
+    
+    // Reconstructing the best set
+    
+    std::vector<ll> selected_objects;
+    ll curr_weight = capacity;
+    
+    for(ll i = objects.size(); i > 0; i--){
+        
+        if(dp[i][curr_weight] != dp[i-1][curr_weight]){ // If it changed, an item was included
+            selected_objects.push_back(i-1);
+            curr_weight -= objects[i-1].weight;
+        }
+    }
+    
+    // Output
+    
+    std::cout << selected_objects.size() << std::endl;
+    for(ll i=0; i<selected_objects.size(); i++){
+        std::string s = " ";
+        if(i == selected_objects.size()-1){ s = ""; }
+        std::cout << selected_objects[i] << s; 
+    }
+    std::cout << std::endl;
+}
+
+int main(){
+    
+    ll capacity, n_objects;
+    while(std::cin >> capacity >> n_objects){
+        std::vector<Object> objects(n_objects);
+        for(ll i=0; i<n_objects; i++) { std::cin >> objects[i].value >> objects[i].weight; }
+        
+        std::vector<std::vector<ll>> dp(n_objects+1, std::vector<ll>(capacity+1, 0));
+        knapstack(capacity,objects,dp);
+    }
+    
+    return 0;
+}
+    
+\end{cppcode}
+
+
+\newpage
+\subsection{Restaurant Orders}
+
+A friend of yours who is working as a waiter has a problem. A group of xkcd-fans have started to
+come to the restaurant and order food as in the comic strip below. Each order takes him a lot of time
+to figure out, but maybe you can help him.
+
+\subsubsection{Task}
+
+You are to write a program that finds out what was ordered given the total cost of the order and the
+cost of each item on the menu.
+
+\subsubsection{Input}
+
+The input starts with a line containing one integer $n$ ($1 \leq n \leq 100$), the number of items on the
+menu. The next line contains $n$ space-separated positive integers $c_1, c_2, \dots, c_n$, denoting the cost of
+each item on the menu in Swedish kronor. No item costs more than $1\,000 \text{ SEK}$.
+
+This is followed by a line containing $m$ ($1 \leq m \leq 1\,000$), the number of orders placed, and a line
+with $m$ orders. Each order is given as an integer $s$ ($1 \leq s \leq 30\,000$), the total cost of all ordered
+items in SEK.
+
+\subsubsection{Output}
+
+For each order in the input output one line as follows. If there is one \textbf{unique} order giving the
+specified total cost, output a space-separated list of the numbers of the items on that order in
+ascending order. If the order contains more than one of the same item, print the corresponding
+number the appropriate number of times. The first item on the menu has number 1, the second 2,
+and so on.
+
+If there doesn't exist an order that gives the specified sum, output \texttt{Impossible}. If there are more
+than one order that gives the specified sum, output \texttt{Ambiguous}.
+
+\begin{cppcode}
+
+#include <bits/stdc++.h>
+
+#define ll long long
+
+#define IMPOSSIBLE 0
+#define UNIQUE 1
+#define AMBIGOUS 2
+
+
+std::string reconstruction(std::vector<ll> &items_costs, std::vector<ll> &dp_reconstruction, ll curr_order){
+    
+    ll curr_cost = curr_order;
+    std::vector<ll> solution_items;
+    
+    
+    while(curr_cost > 0) {
+        
+        ll curr_item = dp_reconstruction[curr_cost];
+        
+        solution_items.push_back(curr_item);
+        
+        curr_cost -= items_costs[curr_item-1];
+    }
+    
+    
+    std::reverse(solution_items.begin(), solution_items.end());
+    
+    std::string solution = "";
+    
+    for(ll i=0; i<solution_items.size(); i++){
+        
+        solution = solution + std::to_string(solution_items[i]) + " ";
+        
+    }
+    
+    solution.pop_back();
+
+    
+    return solution;
+}
+
+void tabulation(std::vector<ll> &items_costs, std::vector<ll> &orders_values, std::vector<ll> &dp_values, std::vector<ll> &dp_reconstruction, ll max_order){
+    
+    dp_values[0] = UNIQUE;
+    
+    for(ll curr_item = 1; curr_item <= items_costs.size(); curr_item++){
+        ll curr_item_value = items_costs[curr_item-1];
+        
+        for(ll curr_cost = curr_item_value; curr_cost <= max_order; curr_cost++){
+            
+            ll prev_cost = curr_cost-curr_item_value;
+            
+            if(dp_values[prev_cost] != IMPOSSIBLE){
+                
+                if(dp_values[prev_cost] == AMBIGOUS || dp_values[curr_cost] == AMBIGOUS) {dp_values[curr_cost] = AMBIGOUS;}
+                else if(dp_values[prev_cost] == UNIQUE){
+                    
+                    if(dp_values[curr_cost] == IMPOSSIBLE){
+                        dp_values[curr_cost] = UNIQUE;
+                        dp_reconstruction[curr_cost] = curr_item;
+                    }
+                    else if(dp_values[curr_cost] == UNIQUE){
+                        dp_values[curr_cost] = AMBIGOUS;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void restaurantOrders(){
+    
+    ll n_items;
+    std::cin >> n_items;
+    
+    std::vector<ll> items_costs(n_items);
+    for(ll i=0; i<n_items; i++){std::cin >> items_costs[i];}
+    
+    ll m_orders;
+    std::cin >> m_orders;
+    
+    ll max_order = LLONG_MIN;
+    std::vector<ll> orders_values(m_orders);
+    
+    for(ll curr_order=0; curr_order<m_orders; curr_order++){
+        std::cin >> orders_values[curr_order];
+        max_order = std::max(max_order, orders_values[curr_order]);
+    }
+    
+    std::vector<ll> dp_values(max_order+1,IMPOSSIBLE);
+    std::vector<ll> dp_reconstruction(max_order+1,-1);
+    
+    tabulation(items_costs,orders_values,dp_values,dp_reconstruction,max_order);
+    
+    for(ll curr_order = 0; curr_order < m_orders; curr_order++){
+        
+        switch(dp_values[orders_values[curr_order]]){
+            case IMPOSSIBLE:
+                std::cout << "Impossible" << std::endl;
+                break;
+            case UNIQUE:
+                std::cout << reconstruction(items_costs,dp_reconstruction,orders_values[curr_order]) << std::endl;
+                break;
+            case AMBIGOUS:
+                std::cout << "Ambiguous" << std::endl;
+                break;
+        }
+    }
+}
+
+int main(){
+    restaurantOrders();
+    return 0;
+}
+    
+\end{cppcode}
+
+\newpage
+\subsection{Presidential Elections}
+
+Por el momento saltado (muy largo)
+
+
+\newpage
+\subsection{Spiderman Workout}
+
+Staying fit is important for every super hero, and Spiderman is no exception. Every day he undertakes a climbing exercise in which he climbs a certain distance, rests for a minute, then climbs again, rests again, and so on. The exercise is described by a sequence of distances $d_1, d_2, \dots, d_m$, telling how many meters he is to climb before the first break, before the second break, and so on. From an exercise perspective it does not really matter if he climbs up or down at the $i$:th climbing stage, but it is practical to sometimes climb up and sometimes climb down so that he both starts and finishes at street level. Obviously, he can never be below street level. Also, he would like to use as low a building as possible (he does not like to admit it, but he is actually afraid of heights). The building must be at least 2 meters higher than the highest point his feet reach during the workout.
+
+He wants your help in determining when he should go up and when he should go down. The answer must be legal: It must start and end at street level (0 meters above ground) and it may never go below street level. Among the legal solutions he wants one that minimizes the required building height. When looking for a solution, you may not reorder the distances.
+
+If the distances are $20\ 20\ 20\ 20\ 20$ he can either climb up, up, down, down or up, down, up, down. Both are legal, but the second one is better (in fact optimal) because it only requires a building of height 22, whereas the first one requires a building of height 42. If the distances are $3\ 2\ 5\ 3\ 1\ 2$, an optimal legal solution is to go up, up, down, up, down, down. Note that for some distance sequences there is no legal solution at all (e.g., for $3\ 4\ 2\ 1\ 6\ 4\ 5$).
+
+\subsubsection{Input}
+The first line of the input contains an integer $N$ giving the number of test cases, $1 \le N \le 101$. The following $2N$ lines specify the test scenarios, two lines per scenario: the first line gives a positive integer $M \le 40$ which is the number of distances, and the following line contains the $M$ positive integer distances. For any scenario, the total distance climbed (the sum of the distances in that scenario) is at most $1000$.
+
+\subsubsection{Output}
+For each input scenario a single line should be output. This line should either be the string \texttt{"IMPOSSIBLE"} if no legal solution exists, or it should be a string of length $M$ containing only the characters \texttt{"U"} and \texttt{"D"}, where the $i$:th character indicates if Spiderman should climb up or down at the $i$:th stage. If there are several different legal and optimal solutions, output one of them (it does not matter which one as long as it is optimal).
+
+\begin{cppcode}
+
+#include <bits/stdc++.h>
+
+#define optimize() std::ios_base::sync_with_stdio(false) ; std::cin.tie(NULL) ; std::cout.tie(NULL) ;
+
+#define ll long long
+
+#define CLIMB_UP true
+#define CLIMB_DOWN false
+
+#define MAX_HEIGHT 1000
+
+std::string testcase(std::vector<ll> &distances){
+    
+    std::vector<std::vector<ll>> dp_min_jumps(MAX_HEIGHT+1, std::vector<ll>(distances.size()+1, LLONG_MAX)); // dp[altura][estado salto]
+    std::vector<std::vector<bool>> dp_directions(MAX_HEIGHT+1, std::vector<bool>(distances.size()+1, CLIMB_DOWN));
+    
+    // Caso base:
+
+    dp_min_jumps[0][0] = 0; // En 0 de altura, con ningun salto, te quedas en 0
+
+    // Iteración
+
+    for(ll curr_distance_idx = 1; curr_distance_idx <= distances.size(); curr_distance_idx++){
+
+        ll curr_distance = distances[curr_distance_idx-1];
+
+        for(ll curr_height = 0; curr_height <= MAX_HEIGHT; curr_height++){
+
+            if(dp_min_jumps[curr_height][curr_distance_idx-1] == LLONG_MAX){continue; } // Si no se pudo llegar desde el paso anterior, no seguir
+
+            // Caso para arriba
+            ll new_height = curr_height + curr_distance;
+            if(new_height <= MAX_HEIGHT){
+
+                ll posssible_height = std::max(dp_min_jumps[curr_height][curr_distance_idx-1], new_height);
+
+                if(dp_min_jumps[new_height][curr_distance_idx] > posssible_height){
+                    dp_min_jumps[new_height][curr_distance_idx] = posssible_height;
+                    dp_directions[new_height][curr_distance_idx] = CLIMB_UP;
+                }
+
+            }
+
+            // Caso para abajo
+            new_height = curr_height - curr_distance;
+            if(new_height >= 0){
+
+                ll posssible_height = dp_min_jumps[curr_height][curr_distance_idx-1];
+
+                if(dp_min_jumps[new_height][curr_distance_idx] > posssible_height){
+                    dp_min_jumps[new_height][curr_distance_idx] = posssible_height;
+                    dp_directions[new_height][curr_distance_idx] = CLIMB_DOWN;
+                }
+
+            }
+
+        }
+
+    }
+
+    // Resultado
+
+    if(dp_min_jumps[0][distances.size()] == LLONG_MAX){return "IMPOSSIBLE"; }
+
+    // Reconstrucción
+
+    std::string result;
+    ll curr_height = 0;
+
+    for(ll curr_distance_idx = distances.size(); curr_distance_idx >= 1; curr_distance_idx--){
+        ll dist = distances[curr_distance_idx-1];
+        
+        // Check the direction stored for the optimal path ending at curr_height at this step
+        bool move = dp_directions[curr_height][curr_distance_idx];
+
+        if(move == CLIMB_UP){
+            result.push_back('U');
+            curr_height -= dist; 
+
+        }
+        else {
+            result.push_back('D');
+            curr_height += dist;
+        }
+
+    }
+
+    std::reverse(result.begin(), result.end());
+
+    return result;
+    
+}
+
+int main(){
+    
+    ll N_testcases;
+    std::cin >> N_testcases;
+    
+    for(ll curr_testcase = 0; curr_testcase < N_testcases; curr_testcase++){
+        
+        ll M_distances;
+        std::cin >> M_distances;
+        
+        std::vector<ll> distances(M_distances);
+        for(ll curr_distance = 0; curr_distance < M_distances; curr_distance++){ std::cin >> distances[curr_distance]; }
+        
+        std::cout << testcase(distances) << std::endl;
+        
+    }
+    
+    return 0;
+}
+    
+\end{cppcode}
+
+\newpage
+\subsubsection{Increasing Subsequence}
+
+A \textbf{strictly increasing sequence} is a sequence of numbers $a_1, a_2, \dots, a_n$ such that, for $1 < i \le n$, $a_{i-1} < a_i$. A subsequence of $a_1, a_2, \dots, a_n$ is identified by a strictly increasing sequence of indices, $x_1, x_2, \dots, x_m$ where $1 \le x_1$ and $x_m \le n$. We say $a_{x_1}, a_{x_2}, \dots, a_{x_m}$ is a subsequence of $a_1, a_2, \dots, a_n$. For example, given the sequence $8, 90, 4, 10\,000, 2, 18, 60, 172, 99$, we can say that $90, 4, 10\,000, 18$ is a subsequence but $8, 90, 18, 2, 60$ is not. The subsequence $4, 18, 60, 172$ is a subsequence that is, itself, strictly increasing.
+
+Given a sequence of numbers, can you write a program to find a strictly increasing subsequence that is as long as possible?
+
+\subsubsection{Input}
+Input has up to $200$ test cases, one per line. Each test case starts with an integer $1 \le n \le 200$, followed by $n$ integer values, all in the range $[0, 10^8]$. A value of zero for $n$ marks the end of input.
+
+\subsubsection{Output}
+For each test case, output the length of the longest strictly increasing subsequence, followed by the values of the \textbf{lexicographically-earliest} such sequence. A sequence $a_1, a_2, \dots, a_m$ is lexicographically earlier than $b_1, b_2, \dots, b_m$ if some $a_i < b_i$ and $a_j = b_j$ for all $j < i$.
+
+\begin{cppcode}
+
+#include <bits/stdc++.h>
+
+#define optimize() std::ios_base::sync_with_stdio(false) ; std::cin.tie(NULL) ; std::cout.tie(NULL) ;
+
+#define ll long long
+
+std::vector<ll> reconstruct(std::vector<ll> &values, std::vector<ll> &dp_last_item, ll last_idx){
+    
+    std::stack<ll> stack;
+    
+    while(last_idx != -1){
+            
+            stack.push(values[last_idx]);
+            last_idx = dp_last_item[last_idx];
+            
+        }
+        
+        std::vector<ll> result;
+        while(!stack.empty()){
+            result.push_back(stack.top()); stack.pop();
+        }
+    
+    return result;
+    
+}
+
+void longestIncreasingSubsequence(std::vector<ll> &values, std::vector<ll> &dp_subsequence, std::vector<ll> &dp_last_item){
+    
+    ll n = values.size();
+    
+    for(ll curr_idx = 1; curr_idx < n; curr_idx++){
+        for(ll prev_idx = 0; prev_idx < curr_idx; prev_idx++){
+            
+            if(values[curr_idx] > values[prev_idx]){
+                
+                if(dp_subsequence[curr_idx] < dp_subsequence[prev_idx] + 1){
+                    dp_subsequence[curr_idx] = dp_subsequence[prev_idx] + 1;
+                    dp_last_item[curr_idx] = prev_idx;
+                }
+                else if(dp_subsequence[curr_idx] == dp_subsequence[prev_idx] + 1){
+                    
+                    std::vector<ll> s1 = reconstruct(values,dp_last_item,curr_idx);
+                    std::vector<ll> s2 = reconstruct(values,dp_last_item,prev_idx);
+                    s2.push_back(values[curr_idx]);
+                    
+                    //std::cout << "s1: "; printArray(s1);
+                    //std::cout << "s2: "; printArray(s2);
+                    
+                    if(s2 < s1){
+                        dp_last_item[curr_idx] = prev_idx;
+                        //std::cout << "winner: s1" << std::endl;
+                    }
+                    
+                }
+                
+            }
+            
+        }
+    }
+}
+
+void solve(){
+    
+    ll n_values;
+    while(std::cin >> n_values && n_values != 0){
+        
+        std::vector<ll> values(n_values);
+        for(ll curr_value_idx = 0; curr_value_idx < n_values; curr_value_idx++){
+            std::cin >> values[curr_value_idx];
+            
+        }
+        
+        // dp que mantiene guardado el valor de la subsequence mas grande en el index i
+        std::vector<ll> dp_subsequence(values.size(), 1);
+        // dp que mantiene el ultimo item para forma la subsequencia en el index i
+        std::vector<ll> dp_last_item(values.size(),-1);
+        
+        longestIncreasingSubsequence(values, dp_subsequence, dp_last_item);
+        
+        ll max_len = 0;
+        for(ll curr_idx = 0; curr_idx < values.size(); curr_idx++){
+            if( dp_subsequence[curr_idx] > max_len){max_len = dp_subsequence[curr_idx];}
+        }
+        
+        std::vector<ll> LIS;
+        bool first = true;
+        
+        for(ll curr_idx = 0; curr_idx < values.size(); curr_idx++){
+            if(dp_subsequence[curr_idx] == max_len){
+                std::vector<ll> curr_LIS = reconstruct(values,dp_last_item,curr_idx);
+                if(first || curr_LIS < LIS ){
+                    LIS = curr_LIS;
+                    first = false;
+                }
+            }
+        }
+        
+        std::cout << LIS.size() << " ";
+        for(ll curr_idx = 0; curr_idx < LIS.size(); curr_idx++){
+            std::cout << LIS[curr_idx];
+            if(curr_idx != LIS.size()-1){std::cout << " ";}
+        }
+        std::cout << std::endl;
+        
+    }
+    
+}
+
+int main(){
+    optimize();
+    solve();
+    return 0;
+}
+
+\end{cppcode}
+
+\newpage
+\subsection{Single source shortest path, negative weights (Bellmans)}
+
+\subsubsection{Input}
+The input consists of several test cases. Each test case starts with a line with four non-negative integers, $1 \le n \le 1000$, $0 \le m \le 5000$, $1 \le q \le 100$ and $0 \le s < n$, separated by single spaces, where $n$ is the number of nodes in the graph, $m$ the number of edges, $q$ the number of queries and $s$ the index of the starting node. Nodes are numbered from $0$ to $n - 1$. Then follow $m$ lines, each line consisting of three (space-separated) integers $u$, $v$ and $w$ indicating that there is an edge from $u$ to $v$ in the graph with weight $-2000 \le w \le 2000$. Then follow $q$ lines of queries, each consisting of a single non-negative integer, asking for the minimum distance from node $s$ to the node number given on the query line.
+
+Input will be terminated by a line containing four zeros, this line should \textbf{not} be processed.
+
+\subsubsection{Output}
+For each query, output a single line containing the minimum distance from node $s$ to the node specified in the query, the word \texttt{"Impossible"} if there is no path from $s$ to that node, or \texttt{"-Infinity"} if there are arbitrarily short paths from $s$ to that node. For clarity, the sample output has a blank line between the output for different cases.
+
+\begin{cppcode}
+/**
+    * Realiza el algoritmo de Bellman para encontrar distancias con aristas de peso negativo
+    * Esta implementación considera el Grafo enlazado en partes previas del documento. Utilizar aquel.
+    * 
+    * @param s_node Nodo incial donde realizar el Bellman
+    * @param ref_node Nodo que se quiere saber su valor de distancia desde s_node
+    * 
+    * @return Valor
+    * 
+    * @timecomplexity: O(V * E)
+    * @spacecomplexity: O(2V) = O(V)
+    */
+int bellman(int s_node, int ref_node){
+    
+    std::vector<long long> dp_distances(n_nodes, INF); // Utiliza long long por si hay overflow
+    std::vector<bool> dp_negative_cycle(n_nodes, false);
+    
+    // Caso base: dp[s_node]
+    
+    dp_distances[s_node] = 0;
+    
+    // Relajacion: n-1 iteraciones
+    
+    for(int curr_itr = 0; curr_itr < n_nodes - 1; curr_itr++){
+        for(int curr_node = 0; curr_node < n_nodes; curr_node++){
+            
+            if(dp_distances[curr_node] == INF){continue;}
+            
+            std::vector<Edge>& adj = nodes[curr_node].adj;
+            
+            for(Edge edge : adj){
+                
+                int node_v = edge.node_v;
+                
+                long long new_dist = dp_distances[curr_node] + edge.weight; 
+                
+                if (new_dist < dp_distances[node_v]){
+                    dp_distances[node_v] = new_dist;
+                }
+            }
+        }
+    }
+    
+    // Detección y Propagación de Ciclos Negativos
+    
+    // Primero, detectar qué nodos pueden ser relajados en la n-ésima iteración
+    for(int curr_node = 0; curr_node < n_nodes; curr_node++){
+        
+        if(dp_distances[curr_node] == INF){ continue; }
+        
+        std::vector<Edge>& adj = nodes[curr_node].adj;
+        
+        for(Edge edge : adj){
+            
+            int node_v = edge.node_v;
+            long long new_dist = dp_distances[curr_node] + edge.weight;
+            
+            // Si se puede relajar en la n-ésima iteración, está en un ciclo negativo o es alcanzable desde uno.
+            if(new_dist < dp_distances[node_v]){
+                dp_negative_cycle[node_v] = true;
+            }
+        }
+    }
+    
+    // Segundo, propagar el estado de ciclo negativo a todos los nodos alcanzables.
+    // Esto requiere n-1 iteraciones adicionales (similar a un BFS/DFS implícito)
+    for(int curr_itr = 0; curr_itr < n_nodes - 1; curr_itr++){
+        for(int curr_node = 0; curr_node < n_nodes; curr_node++){
+            
+            if(dp_negative_cycle[curr_node]){
+                
+                std::vector<Edge>& adj = nodes[curr_node].adj;
+                
+                for(Edge edge : adj){
+                    int node_v = edge.node_v;
+                    dp_negative_cycle[node_v] = true;
+                }
+            }
+        }
+    }
+    
+    // Retorno
+    
+    if(dp_distances[ref_node] == INF){return INF;} // No alcanzable
+    else if(dp_negative_cycle[ref_node] == true){return -1; } // Negative cycle
+    else{return dp_distances[ref_node]; } // Resolución
+}
+\end{cppcode}
