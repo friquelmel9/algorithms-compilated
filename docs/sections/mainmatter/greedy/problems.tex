@@ -1,0 +1,580 @@
+\section{Problemas Greedy}
+
+La siguiente sección incluye todos los problemas Greedy realizados.
+
+\newpage
+\subsection{Frosh Week}
+
+Professor Zac is trying to finish a collection of tasks during the first week at the start of the term. He knows precisely how long each task will take, down to the millisecond. Unfortunately, it is also Frosh Week. Zac's office window has a clear view of the stage where loud music is played. He cannot focus on any task when music is blaring.
+
+\vspace{0.5em}
+
+\noindent The event organizers are also very precise. They supply Zac with intervals of time when music will not be playing. These intervals are specified by their start and end times down to the millisecond.
+
+\vspace{0.5em}
+
+\noindent Each task that Zac completes must be completed in one quiet interval. He cannot pause working on a task when music plays (he loses his train of thought). Interestingly, the lengths of the tasks and quiet intervals are such that it is impossible to finish more than one task per quiet interval!
+
+\vspace{0.5em}
+
+\noindent Given a list of times $t_i$ (in milliseconds) that each task will take and a list of times $\ell_j$ (in milliseconds) specifying the lengths of the intervals when no music is being played, what is the maximum number of tasks that Zac can complete?
+
+\subsubsection{Input}
+
+\noindent The first line of input contains a pair of integers $n$ and $m$, where $n$ is the number of tasks and $m$ is the number of time intervals when no music is played.
+The second line consists of a list of integers $t_1, t_2, \dots, t_n$ indicating the length of time of each task.
+The final line consists of a list of times $\ell_1, \ell_2, \dots, \ell_m$ indicating the length of time of each quiet interval when Zac is at work this week.
+
+\vspace{0.5em}
+
+\noindent You may assume that $1 \leq n, m \leq 200\,000$ and $100\,000 \leq t_i, \ell_j \leq 199\,999$ for each task $i$ and each quiet interval $j$.
+
+\subsubsection{Output}
+
+\noindent Output consists of a single line containing a single integer indicating the number of tasks that Zac can accomplish from his list during this first week.
+
+\begin{cppcode}
+    
+    #include <bits/stdc++.h>
+
+#define ll long long
+
+int main(){
+    
+    ll t;
+    std::cin >> t;
+    
+    while(t--){
+        
+        ll l, n;
+        std::cin >> l >> n;
+        
+        ll input;
+        std::vector<ll> positions;
+        
+        for(int i=0; i<n; i++){
+            std::cin >> input;
+            positions.push_back(input);
+        }
+        
+        ll min = 0;
+        ll max = 0;
+        
+        for(int i=0; i<n; i++){
+            
+            ll curr_pos = positions[i];
+            
+            ll left_distance = curr_pos;
+            ll right_distance = l - curr_pos;
+            
+            ll min_curr_distance = std::min(left_distance,right_distance);
+            min = std::max(min_curr_distance,min);
+            
+            ll max_curr_distance = std::max(left_distance,right_distance);
+            max = std::max(max_curr_distance,max);
+        }
+        
+        std::cout << min << " " << max << std::endl;
+        
+    }
+
+    return 0;
+}
+    
+\end{cppcode}
+
+\newpage
+\subsection{Assigning Workstations}
+
+Penelope is part of the admin team of the newly built supercomputer. Her job is to assign workstations to the researchers who come here to run their computations at the supercomputer.
+
+Penelope is very lazy and hates unlocking machines for the arriving researchers. She can unlock the machines remotely from her desk, but does not feel that this menial task matches her qualifications. Should she decide to ignore the security guidelines she could simply ask the researchers not to lock their workstations when they leave, and then assign new researchers to workstations that are not used any more but that are still unlocked. That way, she only needs to unlock each workstation for the first researcher using it, which would be a huge improvement for Penelope.
+
+Unfortunately, unused workstations lock themselves automatically if they are unused for more than $m$ minutes. After a workstation has locked itself, Penelope has to unlock it again for the next researcher using it. Given the exact schedule of arriving and leaving researchers, can you tell Penelope how many unlockings she may save by asking the researchers not to lock their workstations when they leave and assigning arriving researchers to workstations in an optimal way?
+
+You may assume that there are enough workstations available.
+
+\subsubsection{Input}
+
+The input consists of:
+* one line with two integers $n$ ($1 \le n \le 300\,000$), the number of researchers, and $m$ ($1 \le m \le 10^8$), the number of minutes of inactivity after which a workstation locks itself;
+* $n$ lines each with two integers $a$ and $s$ ($1 \le a, s \le 10^8$), representing a researcher that arrives at $a$ minutes and stays for $s$ minutes.
+
+\subsubsection{Output}
+
+Output the maximum number of unlockings Penelope may save herself.
+
+\subsubsection{Sample 1}
+
+3 5
+
+1 5
+
+6 3
+
+14 6
+
+\subsubsection{Output 1:}
+
+2
+
+\subsubsection{Input} 2
+
+5 10 \\
+2 6 \\
+1 2 \\
+17 7 \\
+3 9 \\
+15 6 \\
+
+\subsubsection{Output 2}
+
+3
+
+\begin{cppcode}
+    
+#include <bits/stdc++.h>
+
+#define ll long long
+
+struct Worker{
+    ll arrive_time;
+    ll duration;
+};
+
+struct Workstation{
+    ll start;
+    ll end;
+};
+
+int main(){
+    
+    ll n, m;
+    std::cin >> n >> m;
+    
+    std::priority_queue<ll> inactive_time;
+    std::vector<Worker> workers;
+    
+    for(int i=0; i<n; i++){
+        
+        ll arrive_time, duration;
+        std::cin >> arrive_time >> duration;
+        
+        Worker worker;
+        worker.arrive_time = arrive_time;
+        worker.duration = duration;
+        
+        workers.push_back(worker);
+        
+    }
+        
+    std::sort(workers.begin(), workers.end(), [](const Worker&a, const Worker&b){
+        return a.arrive_time < b.arrive_time;
+    });
+    
+    ll unlockings_saved = 0;
+    
+    for(int i=0; i<n; i++){
+        
+        ll curr_workstation;
+        Worker curr_worker = workers[i];
+        
+        while(!inactive_time.empty()){
+            
+            ll curr_workstation_inactive = -inactive_time.top();
+            
+            // no activity has started the inactive period
+            if(curr_workstation_inactive > curr_worker.arrive_time){
+                break;
+            }
+            
+            // In the inactive period
+            else if(curr_workstation_inactive <= curr_worker.arrive_time && curr_worker.arrive_time <= curr_workstation_inactive+m){
+                unlockings_saved++;
+                inactive_time.pop();
+                break;
+            }
+            
+            // inactive_time already ended
+            else{
+                inactive_time.pop();
+            }
+            
+        }
+        
+        curr_workstation = curr_worker.arrive_time + curr_worker.duration;
+        inactive_time.push(-curr_workstation);
+        
+        
+        
+    }
+    
+    std::cout << unlockings_saved << std::endl;
+    
+    return 0;
+}
+    
+\end{cppcode}
+
+\newpage
+\subsection{Birds on a wire}
+
+There is a long electrical wire of length $l$ centimetres between two poles where birds like to sit. After a long day at work you like to watch the birds on the wire from your balcony. Some time ago you noticed that they don't like to sit closer than $d$ centimetres from each other. In addition, they cannot sit closer than $6$ centimetres to any of the poles, since there are spikes attached to the pole to keep it clean from faeces that would otherwise damage and weaken it. You start wondering how many more birds can possibly sit on the wire.
+
+Task
+
+Given numbers $l$ and $d$, how many additional birds can sit on the wire given the positions of the birds already on the wire? For the purposes of this problem we assume that the birds have zero width.
+
+\subsubsection{Input}
+
+The first line contains three space separated integers: the length of the wire $l$, distance $d$ and number of birds $n$ already sitting on the wire. The next $n$ lines contain the positions of the birds in any order. All number are integers, $1 \le l, d \le 1\,000\,000\,000$ and $0 \le n \le 20\,000$. (If you have objections to the physical plausibility of fitting that many birds on a line hanging between two poles, you may either imagine that the height of the line is $0$ cm above ground level, or that the birds are ants instead.) You can assume that the birds already sitting on the wire are at least $6$ cm from the poles and at least $d$ centimetres apart from each other.
+
+\subsubsection{Output}
+
+Output one line with one integer -- the maximal number of additional birds that can possibly sit on the wire.
+
+\begin{cppcode}
+    
+#include <bits/stdc++.h>
+
+#define ll long long
+
+int main(){
+    
+    ll l,d,n;
+    std::cin >> l >> d >> n;
+    
+    std::vector<ll> positions;
+    ll input;
+    for(int i=0; i<n; i++){
+        std::cin >> input;
+        positions.push_back(input);
+    }
+    
+    if(n>0){std::sort(positions.begin(), positions.end());}
+    
+    ll new_birds = 0;
+    
+    // case birds
+    for(ll i=0; i<n-1; i++){
+        
+        ll pos1 = positions[i];
+        ll pos2 = positions[i+1];
+        
+        new_birds += std::max((pos2-pos1)/d - 1, 0ll);
+    }
+    
+    // edge cases
+    if(n > 0){
+        new_birds += (positions[0]-6)/d;
+        new_birds += (l-6-positions[n-1])/d;
+    }
+    else if(l >= 12) // no birds but string
+        new_birds += (l-12)/d + 1;
+    
+    std::cout << new_birds << std::endl;
+    return 0;
+}
+    
+\end{cppcode}
+
+\newpage
+\subsection{Shopaholic}
+
+Lindsay is a shopaholic. Whenever there is a discount of the kind where you can buy three items and only pay for two, she goes completely mad and feels a need to buy all items in the store. You have given up on curing her for this disease, but try to limit its effect on her wallet.
+
+You have realized that the stores coming with these offers are quite selective when it comes to which items you get for free; it is always the cheapest ones. As an example, when your friend comes to the counter with seven items, costing 400400, 350350, 300300, 250250, 200200, 150150, and 100100 dollars, she will have to pay 15001500 dollars. In this case she got a discount of 250250 dollars. You realize that if she goes to the counter three times, she might get a bigger discount. E.g. if she goes with the items that costs 400400, 300300 and 250250, she will get a discount of 250250 the first round. The next round she brings the item that costs 150150 giving no extra discount, but the third round she takes the last items that costs 350350, 200200 and 100100 giving a discount of an additional 100100 dollars, adding up to a total discount of 350350.
+
+Your job is to find the maximum discount Lindsay can get.
+
+\subsubsection{Input}
+
+The first line of input gives the number of items Lindsay is buying, $1 \leq n \leq 200000$. The next line gives the prices of these items, which are integers $1 \leq p_i \leq 200000$.
+
+\subsubsection{Output}
+
+Output one line giving the maximum discount Lindsay can get by selectively choosing which items she brings to the counter at the same time.
+
+\begin{cppcode}
+    
+#include <bits/stdc++.h>
+
+#define ll long long
+
+int main(){
+    
+    ll n;
+    std::cin >> n;
+    
+    std::priority_queue<ll> prices;
+    
+    while(n--){
+        ll item_price;
+        std::cin >> item_price;
+        prices.push(item_price);
+    }
+    
+    std::vector<ll> trio;
+    ll discounts = 0;
+    
+    while(!prices.empty()){
+        
+        trio.push_back(prices.top());
+        prices.pop();
+        
+        if(trio.size() == 3){ 
+            discounts += *std::min_element(trio.begin(), trio.end());
+            trio.clear();
+        }
+        
+    }
+    
+    std::cout << discounts;
+    
+    return 0;
+}
+    
+\end{cppcode}
+
+\newpage
+\subsection{Boiling Vegetables}
+
+The trick to boiling vegetables is to make sure all pieces
+are about the same size. If they are not, the small ones get
+too soft or the large ones get undercooked (or both).
+Fortunately, you have heard of the kitchen knife, but your
+parents' warnings of using sharp instruments still echoes
+in your head. Therefore you better use it as little as
+possible. You can take a piece of a vegetable of weight $w$
+and cut it arbitrarily in two pieces of weight $w_{\text{left}}$ and
+$w_{\text{right}}$, where $w_{\text{left}} + w_{\text{right}} = w$. This operation constitutes a ``cut''. Given a set of pieces of
+vegetables, determine the minimum number of cuts needed to make the ratio between the smallest
+and the largest resulting piece go above a given threshold.
+
+\subsubsection{Input}
+
+The input starts with a floating point number $T$ with 2 decimal digits, $0.5 < T < 1$, and a positive
+integer $N \leq 1000$. Next follow $N$ positive integer weights $w_1, w_2, \dots, w_N$. All weights are less than
+$10^6$.
+
+\subsubsection{Output}
+
+Output the minimum number of cuts needed to make the ratio between the resulting minimum
+weight piece and the resulting maximum weight piece be above $T$. You may assume that the number
+of cuts needed is less than 500.
+
+To avoid issues with floating point numbers, you can assume that the optimal answer for ratio $T$ is
+the same as for ratio $T' + 0.0001$.
+
+\begin{cppcode}
+    
+#include <bits/stdc++.h>
+
+#define ld float
+#define ll long long
+
+using namespace std;
+
+int main(){
+    
+    ld T;
+    cin >> T;
+    
+    ll N;
+    cin >> N;
+    
+    auto comp = [](const pair<ll,ll> &a, const pair<ll,ll> &b){
+        return (a.first/a.second) < (b.first/b.second);
+    };
+    
+    priority_queue<pair<ll,ll>, vector<pair<ll,ll>>, decltype(comp)> ratios(comp); 
+    
+    ld min_value = LONG_LONG_MAX;
+    ll weight;
+    
+    while(N--){
+        cin >> weight;
+        ratios.push({weight, 1});
+        min_value = std::min(min_value, (ld)weight); 
+    }
+    
+    ll cuts = 0;
+    
+    while(!ratios.empty()){
+        pair<ll, ll> max_ratio = ratios.top();    
+        if(min_value/(max_ratio.first/max_ratio.second) >= T) break;
+        
+        
+        ratios.pop();
+        ratios.push({max_ratio.first, (max_ratio.second + 1)});
+        cuts++;
+        
+        min_value = std::min(min_value, (ld)(max_ratio.first/(max_ratio.second + 1)));
+            
+    }
+    
+    std::cout << cuts;
+    
+    return 0;
+}
+    
+\end{cppcode}
+
+\newpage
+\subsection{Square Peg in a Round Hole}
+
+Mr. Johnson likes to build houses. In fact, he likes it so much that he has built a lot of houses that he
+has not yet placed on plots. He has recently acquired $N$ circular plots. The city government has
+decided that there can be only one house on each plot, and a house cannot touch the boundary of the
+plot.
+
+Mr. Johnson has $M$ circular houses and $K$ square houses. Help him figure out how many of the plots
+he can fill with houses so that he can get some money back on his investments.
+
+\subsubsection{Input}
+
+The first line of input consists of 3 space-separated integers $N$, $M$, and $K$. The second line contains
+$N$ space-separated integers, where the $i^{\text{th}}$ integer denotes the radius $r'_i$ of the $i^{\text{th}}$ plot. The third line
+contains $M$ space-separated integers, where the $i^{\text{th}}$ integer denotes the radius $r_i$ of the $i^{\text{th}}$ circular
+house. The fourth line contains $K$ space-separated integers, where the $i^{\text{th}}$ integer denotes the side
+length $s_i$ of the $i^{\text{th}}$ square house.
+
+\subsubsection{Output}
+
+Output the largest number of plots he can fill with houses.
+
+\subsubsection{Limits}
+
+\begin{itemize}
+    \item $1 \leq N, M, K, r_i, s_i \leq 100$
+\end{itemize}
+
+\begin{cppcode}
+    
+#include <bits/stdc++.h>
+
+#define ld long double
+
+int main(){
+    
+    ld n,m,k;
+    std::cin >> n >> m >> k;
+    
+    std::priority_queue<ld> plot_radius;
+    std::priority_queue<ld> house_radius;
+    
+    ld input;
+    while(n--){
+        std::cin >> input;
+        plot_radius.push(input);
+    }
+    
+    while(m--){
+        std::cin >> input;
+        house_radius.push(input);
+    }
+    
+    while(k--){
+        std::cin >> input;
+        house_radius.push(input / std::sqrt(2.0));
+    }
+    
+    long long solution = 0;
+    
+    while(!plot_radius.empty() && !house_radius.empty()){
+        
+        ld curr_plot_radius = plot_radius.top();
+        plot_radius.pop();
+        
+        while(!house_radius.empty()){
+            
+            ld curr_house_radius = house_radius.top();
+            house_radius.pop();
+            if(curr_house_radius < curr_plot_radius){
+                solution++;
+                break;
+            }
+        }
+    }
+    
+    std::cout << solution;
+    
+    
+    return 0;
+}
+    
+\end{cppcode}
+
+\newpage
+\subsection{Ants}
+
+An army of ants walk on a horizontal pole of length $l \text{ cm}$, each with a
+constant speed of $1 \text{ cm/s}$. When a walking ant reaches an end of the pole,
+it immediately falls off it. When two ants meet they turn back and start
+walking in opposite directions. We know the original positions of ants on
+the pole, unfortunately, we do not know the directions in which the ants
+are walking. Your task is to compute the earliest and the latest possible times needed for all ants to fall off the pole.
+
+\subsubsection{Input}
+
+The first line of input contains one integer giving the number of cases that follow, at most 100. The
+data for each case start with two integer numbers: the length $l$ of the pole (in cm) and $n$, the number
+of ants residing on the pole. These two numbers are followed by $n$ integers giving the position of
+each ant on the pole as the distance measured from the left end of the pole, in no particular order. All
+input integers are between $0$ and $1,000,000$ and they are separated by whitespace.
+
+\subsubsection{Output}
+
+For each case of input, output two numbers separated by a single space. The first number is the
+\textbf{earliest} possible time when all ants fall off the pole (if the directions of their walks are chosen
+appropriately) and the second number is the \textbf{latest} possible such time.
+
+\begin{cppcode}
+    
+#include <bits/stdc++.h>
+
+#define ll long long
+
+int main(){
+    
+    ll t;
+    std::cin >> t;
+    
+    while(t--){
+        
+        ll l, n;
+        std::cin >> l >> n;
+        
+        ll input;
+        std::vector<ll> positions;
+        
+        for(int i=0; i<n; i++){
+            std::cin >> input;
+            positions.push_back(input);
+        }
+        
+        ll min = 0;
+        ll max = 0;
+        
+        for(int i=0; i<n; i++){
+            
+            ll curr_pos = positions[i];
+            
+            ll left_distance = curr_pos;
+            ll right_distance = l - curr_pos;
+            
+            ll min_curr_distance = std::min(left_distance,right_distance);
+            min = std::max(min_curr_distance,min);
+            
+            ll max_curr_distance = std::max(left_distance,right_distance);
+            max = std::max(max_curr_distance,max);
+        }
+        
+        std::cout << min << " " << max << std::endl;
+        
+    }
+
+    return 0;
+}
+    
+\end{cppcode}
