@@ -1,0 +1,119 @@
+\section{Problemas DP Lineal}
+
+Estos tipos de problemas son aquellos que tienen trancisiones consistentes. Generalmente son completables en tiempo lineal.
+
+Las soluciones de estos problemas son usando un arreglo de prefijados, guardando aquel que responda a la necesidad del problema
+
+\subsection{Escaleras para salvar el ramo}
+
+Los estudiantes de Algoritmos y Complejidad se enfrentan a un reto tras un desafiante primer certamen. Con el objetivo de mejorar sus puntajes, exploran estrategias oscuras. Sebastián, uno de los ayudantes, les propone un desafío interesante: cada estudiante comienza con 1000 puntos y debe subir una escalera numerada en la que cada peldaño tiene una penalización en puntos. Al pisar un peldaño, el puntaje indicado en él se descuenta de su total. Los estudiantes pueden avanzar 1, 2 o 3 peldaños a la vez, permitiéndoles saltar algunos peldaños para evitar penalizaciones mayores.
+
+El objetivo es encontrar la estrategia óptima para llegar al último peldaño, partiendo desde el primero, con el mayor puntaje posible
+
+\subsubsection{Input}
+
+La entrada comienza con un entero $n$ que indica el numero de peldaños disponibles ($1 \leq n \leq 10^5$)
+
+En las siguiente $n$ lineas, se encuentra las penalizaciones de cada peldaño ($0 \leq p_i \leq 500$)
+
+\subsubsection{Output}
+
+Imprime un único entero que indica el máximo puntaje posible al llegar al último escalón.
+
+\subsubsection{Solución}
+
+\begin{cppcode}
+    
+ll min_pen(ll n_escaleras, std::vector<ll>&penalizaciones){
+    
+    // Dp: minima penalizacion en el escalon i
+    std::vector<ll> dp_pen(n_escaleras,LLONG_MAX);
+    
+    // caso base:
+    
+    dp_pen[0] = penalizaciones[0];
+    if(n_escaleras>=2) dp_pen[1] = dp_pen[0] + penalizaciones[1]; //desde 0 salte 1
+    if(n_escaleras>=3) dp_pen[2] = std::min(dp_pen[0],dp_pen[1]) + penalizaciones[2]; // desde 0/1 salte a 2
+    
+    // iteraciones
+    
+    for(ll curr_escalon = 3; curr_escalon < n_escaleras; curr_escalon++){
+        
+        dp_pen[curr_escalon] = std::min({dp_pen[curr_escalon-3],dp_pen[curr_escalon-2],dp_pen[curr_escalon-1]}) + penalizaciones[curr_escalon];
+        
+    }
+    
+    return dp_pen[n_escaleras-1];
+    
+}
+
+void solve(){
+    
+    ll n_escaleras;
+    std::cin >> n_escaleras;
+    
+    std::vector<ll> penalizaciones(n_escaleras);
+    for(ll curr_p = 0; curr_p < n_escaleras; curr_p++){
+        std::cin >> penalizaciones[curr_p];
+    }
+    
+    std::cout << 1000-min_pen(n_escaleras,penalizaciones) << std::endl;
+    
+}
+
+int main(){
+    optimize()
+    solve();
+    return 0;
+}
+    
+\end{cppcode}
+
+\subsection{House Robber}
+
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
+
+Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
+
+\begin{cppcode}
+    
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        
+        int n_casas = nums.size();
+
+        // casos basicos que no necesitan dp
+        if(nums.size() == 1){
+            return nums[0];
+        }
+
+        if(nums.size() == 2){
+            return std::max(nums[0], nums[1]);
+        }
+
+        // dp 
+        std::vector<int> dp_value(n_casas, 0);
+
+        // caso base: El maximo valor que puedo robar en la primera casa es su propio valor
+        // Lo mismo para la segunda casa, solo que en esta no se incluye la primera
+
+        dp_value[0] = nums[0];
+        dp_value[1] = std::max(nums[1],nums[0]);
+
+        // iteraciones
+
+        for(int curr_idx = 2; curr_idx < n_casas; curr_idx++){
+
+            int curr_house_value = nums[curr_idx];
+
+            dp_value[curr_idx] = std::max(dp_value[curr_idx-1], dp_value[curr_idx-2] + curr_house_value);
+
+        }
+
+        return dp_value[n_casas-1];
+
+    }
+};
+    
+\end{cppcode}

@@ -421,7 +421,7 @@ std::string testcase(std::vector<ll> &distances){
     for(ll curr_distance_idx = distances.size(); curr_distance_idx >= 1; curr_distance_idx--){
         ll dist = distances[curr_distance_idx-1];
         
-        // Check the direction stored for the optimal path ending at curr_height at this step
+        
         bool move = dp_directions[curr_height][curr_distance_idx];
 
         if(move == CLIMB_UP){
