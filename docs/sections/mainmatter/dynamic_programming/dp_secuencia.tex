@@ -32,16 +32,12 @@ abyxb
 Result: axb or ayb
 
 \begin{cppcode}
-    
 #include <bits/stdc++.h>
 
 #define optimize() std::ios_base::sync_with_stdio(false) ; std::cin.tie(NULL) ; std::cout.tie(NULL) ;
 
 #define ll long long
 
-/**
- * 
- */
 std::string reconstruct(std::string &S_string, std::string &T_string, std::vector<std::vector<ll>>& dp){
     
     ll i = S_string.size();
@@ -64,9 +60,6 @@ std::string reconstruct(std::string &S_string, std::string &T_string, std::vecto
     
 }
 
-/**
- * 
- */
 void tabulation(std::string &S_string, std::string &T_string, std::vector<std::vector<ll>>& dp){
     
     // Ignorable, dado que dp inicio con valores 0.
