@@ -1,8 +1,10 @@
-\section{Grafo (Implementación con lista de adyaciencia)}
+\section{Implementación de Grafo}
+
+Esta implementación es utilizada en todos los problemas. Corresponde a una implementación como lista enlazada.
 
 \begin{cppcode}
     
-    /**
+/**
  * Clase que implementa un grafo mediante lista de adyacencia
  * 
  * Esta implementación tiene los siguientes supuestos
@@ -152,6 +154,21 @@ class GraphAdjacency{
             if(node_u < n_nodes){
                 nodes[node_u].state = new_state;
             }
+        }
+        
+        /**
+         * Modifica todo los valores de los nodos al requerido
+         * 
+         * @param new_state Nuevo estado a incluir en todos los nodos
+         */
+        void modifyAllNodeState(int new_state){
+            
+            for(int curr_node = 0; curr_node < n_nodes; curr_node++){
+                
+                modifyNodeState(curr_node,new_state);
+                
+            }
+            
         }
 }
 \end{cppcode}

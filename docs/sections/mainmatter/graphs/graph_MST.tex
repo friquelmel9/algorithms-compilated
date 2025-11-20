@@ -1,0 +1,63 @@
+\section{Minimum Spanning Tree}
+
+El algoritmo de Minimum Spanning Tree permite encontrar el arbol recubridor minimo (aquel que recorre todos los nodos).
+
+La implementación de este algoritmo puede ser mediante Prims o Kruskal. La que se encuentra en la siguiente es Kruskal.
+
+\begin{cppcode}
+    
+    struct KruskalEdge{
+            int node_u;
+            int node_v;
+            int weight;
+        };
+        
+        /**
+         * Obtiene el Minimum Spanning Tree usando Kruskal
+         * 
+         * @pre El grafo debe ser unidireccionado. Para esto, asegurarse de usar AddEdge en ambos sentidos
+         * @pre Debe incluirse una implementación de Disjoint Set Union (DSU)
+         * @pre Utilizar el struct definido para guardar el MSP, KruskalEdge
+         * 
+         * @return Valor
+         * 
+         * @timecomplexity: O(E \log{E}) o O(E \log{V})
+         * @spacecomplexity: O(V + E)
+         */
+        std::vector<KruskalEdge> minimumSpanningTreeKruskal(){
+            
+            std::vector<KruskalEdge> all_edges;
+            
+            for (int node_u = 0; node_u < n_nodes; node_u++) {
+                
+                std::vector<Edge>& adj = nodes[node_u].adj;
+                
+                for (Edge edge : adj) {
+                    int v = edge.node_v;
+                    if (node_u < v) { 
+                        all_edges.push_back({node_u, v, edge.weight});
+                    }
+                }
+            }
+            
+            std::sort(all_edges.begin(), all_edges.end(), [](const KruskalEdge& a, const KruskalEdge& b) {
+                return a.weight < b.weight;
+            });
+            
+            DisjointSetUnion dsu(n_nodes);
+            std::vector<KruskalEdge> mst_edges;
+            
+            for (KruskalEdge edge : all_edges) {
+                if (dsu.unite(edge.node_u, edge.node_v)) {
+                    mst_edges.push_back(edge); 
+                }
+                
+                if (mst_edges.size() == n_nodes - 1) {
+                    break;
+                }
+            }
+            
+            return mst_edges;
+        }
+    
+\end{cppcode}
