@@ -172,3 +172,44 @@ class GraphAdjacency{
         }
 }
 \end{cppcode}
+
+La siguiente implementación es de un grafo con Matriz de adyaciencia.
+
+\begin{cppcode}
+    
+using Matrix = std::vector<std::vector<int>>;
+
+class GraphMatrix{
+    
+    private:
+    
+        Matrix adj; // Matriz que indica valores del camino entre nodos.
+        // adj[node_u][node_v] = valor del camino entre nodo_u y nodo_v
+        
+        const int NO_CAMINO = -1; // Cambiar segun corresponda, para identificar que no hay camino
+        
+        int n_nodes;
+        
+    public:
+    
+        GraphMatrix(int n){
+            n_nodes = n;
+            adj.resize(n_nodes, std::vector<int>(n_nodes,NO_CAMINO));
+        }
+        
+        /**
+         * Modifica el valor de un edge en el grafo
+         */
+        void modifyEdge(int node_u, int node_v, int weight){
+            
+            if(node_u < n_nodes && node_v < n_nodes){
+                
+                adj[node_u][node_v] = weight;
+                
+            }
+            
+        }
+    
+};
+    
+\end{cppcode}

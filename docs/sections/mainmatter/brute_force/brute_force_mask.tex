@@ -1,0 +1,59 @@
+\section{Problemas de Fuerza Bruta con Mascara}
+
+Una mascara binaria sirve para representar si tomamos algun conjunto de posibles valores (1 escogido, 0 no escogido);
+
+\begin{cppcode}
+    
+void iterar_subconjuntos() {
+    
+    int total_combinaciones = 1 << N_subconjunto; 
+    
+    for (int mask = 0; mask < total_combinaciones; ++mask) {
+        
+        std::bitset<N_subconjunto> current_subset(mask); // Crea una mascara de tamaño N con 2^(n-1)
+        
+        for (int i = 0; i < N_subconjunto; ++i) {
+            // Usando bit manipulation en el entero 'mask'
+            if (mask & (1 << i)) {
+                // El elemento i está en el subconjunto
+            }
+        }
+    }
+}
+    
+\end{cppcode}
+
+Si se requiere obtener todas las subparticiones contiguas, se puede utilizar el siguiente codigo basado en la tarea 2.
+
+\begin{cppcode}
+    
+std::vector<std::vector<std::pair<ll,ll>>> getAllPartitions(std::vector<Employee> &full_team){
+
+    std::vector<std::vector<std::pair<ll,ll>>> possible_partitions;
+    
+    ll space = full_team.size()-1;
+    ll total_partitions = 1 << space;
+    
+    for(ll mask=0; mask < total_partitions; mask++){
+        std::vector<std::pair<ll,ll>> curr_partition;
+        ll curr_block_start_index = 0;
+        
+        for (ll i = 0; i < full_team.size(); i++){
+            
+            // Revisa que sea continuo
+            
+            if(i < space && (mask & (1LL << i))){
+                curr_partition.push_back({curr_block_start_index,i});
+                curr_block_start_index = i+1;
+            }
+        }
+        
+        if(curr_block_start_index < full_team.size()){curr_partition.push_back({curr_block_start_index, full_team.size()-1});}
+        possible_partitions.push_back(curr_partition);
+        
+    }
+    
+    return possible_partitions;
+}
+    
+\end{cppcode}
